@@ -1,18 +1,65 @@
 {
-  "extends": ["plugin:@nx/react"],
-  "root": true,
+  "extends": ["plugin:@nx/react", "./.eslintrc.base.json"],
   "ignorePatterns": ["!**/*"],
-  "plugins": ["@nx"],
   "overrides": [
     {
       "files": ["*.ts", "*.tsx"],
-      "extends": ["plugin:@nx/typescript"],
       "rules": {}
     },
     {
       "files": ["*.js", "*.jsx"],
-      "extends": ["plugin:@nx/javascript"],
       "rules": {}
+    },
+    {
+      "files": ["*.ts", "*.tsx", "*.js", "*.jsx"],
+      "rules": {
+        "@nx/enforce-module-boundaries": [
+          "error",
+          {
+            "enforceBuildableLibDependency": true,
+            "allow": ["@mui/*"],
+            "depConstraints": [
+              {
+                "sourceTag": "*",
+                "onlyDependOnLibsWithTags": ["*"]
+              }
+            ]
+          }
+        ],
+        "import/order": [
+          "error",
+          {
+            "alphabetize": {
+              "caseInsensitive": true,
+              "order": "asc"
+            },
+            "groups": ["builtin", "external", "internal"],
+            "newlines-between": "always",
+            "pathGroups": [
+              {
+                "group": "external",
+                "pattern": "react",
+                "position": "before"
+              }
+            ],
+            "pathGroupsExcludedImportTypes": ["react"]
+          }
+        ],
+        "arrow-body-style": ["error", "as-needed"],
+        "react/self-closing-comp": [
+          "error",
+          {
+            "component": true,
+            "html": true
+          }
+        ],
+        "@typescript-eslint/consistent-type-imports": [
+          "error",
+          {
+            "prefer": "type-imports"
+          }
+        ]
+      }
     }
   ]
 }

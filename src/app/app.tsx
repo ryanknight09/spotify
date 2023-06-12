@@ -1,13 +1,34 @@
-// eslint-disable-next-line @typescript-eslint/no-unused-vars
-import styles from './app.module.css';
+import { useEffect } from 'react';
 
-import NxWelcome from './nx-welcome';
+import { ApiProvider, getToken } from '@spotify/api';
+import { BrowserRouter } from 'react-router-dom';
+
+import { useAuth } from './auth-context/authContext';
+import { AuthenticatedRoutes } from './authenticated/authenticatedRoutes';
+import Theme from './theme/theme';
+import { UnAuthenticatedRoutes } from './un-authenticated/unAuthenticatedRoutes';
 
 export function App() {
+  const { token, setToken } = useAuth();
+
+  useEffect(() => {
+    const setNewToken = async () => {
+      setToken(await getToken());
+    };
+
+    setNewToken();
+  }, [setToken]);
+
   return (
-    <div>
-      <NxWelcome title="spotify" />
-    </div>
+    <Theme>
+      <BrowserRouter>
+        <ApiProvider
+          onError={({ tokenExpired }) => tokenExpired && setToken(null)}
+        >
+          {token ? <AuthenticatedRoutes /> : <UnAuthenticatedRoutes />}
+        </ApiProvider>
+      </BrowserRouter>
+    </Theme>
   );
 }
 
