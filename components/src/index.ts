@@ -1,5 +1,6 @@
 export * from './lib/artistCard';
 export * from './lib/heroSection';
+export * from './lib/listenButton';
 export * from './lib/loading';
 export * from './lib/mainContent';
 export * from './lib/mainContentStack';

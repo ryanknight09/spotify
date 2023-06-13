@@ -7,6 +7,7 @@ import {
 
 const CLIENT_ID = 'b01c419b090040b58ca1ae2f9b9c6c18';
 const REDIRECT_URL = 'http://localhost:4200/callback';
+// const REDIRECT_URL = 'https://spotify-877d0.web.app/callback';
 
 export const getToken = async (code?: string) => {
   const localToken = getLocalAccessToken();

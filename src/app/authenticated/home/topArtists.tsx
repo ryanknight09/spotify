@@ -17,6 +17,8 @@ export const TopArtists = () => {
 
   const artist = topConnection.items.slice(0, numCards);
 
+  console.log(artist);
+
   return (
     <Box>
       <SpaceBetween>
@@ -32,12 +34,13 @@ export const TopArtists = () => {
       </SpaceBetween>
       <VisibleToYou variant="subtitle2">Only visible to you</VisibleToYou>
       <ArtistGrid numcards={numCards}>
-        {artist.map(({ id, name, images }) => (
+        {artist.map(({ id, name, images, external_urls }) => (
           <ArtistCard
             key={id}
             name={name}
             imageUrl={images[0].url}
             type="Artist"
+            listenUrl={external_urls.spotify}
           />
         ))}
       </ArtistGrid>

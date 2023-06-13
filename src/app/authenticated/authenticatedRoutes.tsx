@@ -6,9 +6,9 @@ import { Navigate, Route, Routes } from 'react-router-dom';
 import { AuthenticatedAppLayout } from './AuthenticatedAppLayout';
 import { FollowingProfile } from './following/followingProfile';
 import { Home } from './home/home';
-import { TopArtists } from './home/topArtists';
-import { TopTracks } from './home/topTracks';
 import { PlaylsitProfile } from './playlist-profile/playlistProfile';
+import { TopArtists } from './top-artists/topArtists';
+import { TopTracks } from './top-tracks/topTracks';
 import { YourLibrary } from './your-library/yourLibrary';
 
 export const AuthenticatedRoutes: FC = () => (

@@ -5,7 +5,6 @@ import { NavigationButtons } from '@spotify/components';
 import { TracksContextProvider } from '@spotify/utils';
 import { Outlet } from 'react-router-dom';
 
-import { Player } from './player';
 import { SideBar } from './sidebar/sidebar';
 
 export const AuthenticatedAppLayout: FC = () => (
@@ -18,7 +17,6 @@ export const AuthenticatedAppLayout: FC = () => (
           <Outlet />
         </SxOutletWrapper>
       </SxAppLayoutWrapper>
-      <Player />
     </SxStack>
   </TracksContextProvider>
 );

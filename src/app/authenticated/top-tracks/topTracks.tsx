@@ -1,12 +1,10 @@
 import { Box, List, Stack, Typography, styled } from '@mui/material';
 import { useUsersTopTracks } from '@spotify/api';
 import { Loading, TrackHeader } from '@spotify/components';
-import { useTracks } from '@spotify/utils';
 
 import { Track } from '../track';
 
 export const TopTracks = () => {
-  const { onSongSelect, isSelected } = useTracks();
   const { isLoading, error, topConnection } = useUsersTopTracks({
     timeRange: 'short_term',
   });
@@ -15,7 +13,6 @@ export const TopTracks = () => {
   if (error) return <p>{error.message}</p>;
 
   const tracks = topConnection.items;
-  const trackList = tracks.map((track) => track.uri);
 
   return (
     <TopTracksWrapper>
@@ -29,7 +26,10 @@ export const TopTracks = () => {
         <TrackHeader />
         <List dense disablePadding>
           {tracks.map(
-            ({ id, album, name, artists, duration_ms, uri }, index) => (
+            (
+              { id, album, name, artists, duration_ms, external_urls },
+              index
+            ) => (
               <Track
                 key={id}
                 orderNum={index + 1}
@@ -38,8 +38,7 @@ export const TopTracks = () => {
                 albumName={album.name}
                 artists={artists.map((artist) => artist.name).join(', ')}
                 duration={duration_ms}
-                onClick={() => onSongSelect({ trackList, uri })}
-                selected={isSelected(uri)}
+                listenUrl={external_urls.spotify}
               />
             )
           )}

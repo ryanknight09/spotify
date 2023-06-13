@@ -26,12 +26,13 @@ export const FollowingProfile = () => {
           gap: '1.5rem',
         }}
       >
-        {artist.map(({ id, name, images }) => (
+        {artist.map(({ id, name, images, external_urls }) => (
           <ArtistCard
             key={id}
             name={name}
             imageUrl={images[0].url}
             type="Artist"
+            listenUrl={external_urls.spotify}
           />
         ))}
       </ArtistGrid>
@@ -49,10 +50,4 @@ const SpaceBetween = styled(Box)(() => ({
   display: 'flex',
   justifyContent: 'space-between',
   alignItems: 'center',
-}));
-
-const VisibleToYou = styled(Typography)(({ theme }) => ({
-  color: theme.palette.neutral.main,
-  fontWeight: 400,
-  marginBottom: '1rem',
 }));

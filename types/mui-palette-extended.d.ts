@@ -1,5 +1,3 @@
-import '@mui/material';
-
 declare module '@mui/material/styles' {
   interface PaletteColor {
     100?: string;
@@ -39,3 +37,4 @@ declare module '@mui/material/styles' {
     genre: PaletteOptions['primary'];
   }
 }
+export {};

@@ -3,27 +3,25 @@ import { Box, List, Stack, Typography, styled } from '@mui/material';
 import { usePlaylistById } from '@spotify/api';
 import {
   HeroSection,
+  ListenButton,
   Loading,
   MainContent,
   MainContentStack,
   TrackHeader,
 } from '@spotify/components';
-import { useDominantImgColor, useTracks } from '@spotify/utils';
+import { useDominantImgColor } from '@spotify/utils';
 import { useParams } from 'react-router-dom';
 
 import { Track } from '../track';
 
 export const PlaylsitProfile = () => {
   const { playlistSlug = '' } = useParams();
-  const { onSongSelect, isSelected } = useTracks();
   const { playlist, isLoading, error } = usePlaylistById({ id: playlistSlug });
   const imageUrl = playlist?.images[0]?.url || '';
   const bgcolor = useDominantImgColor(imageUrl);
 
   if (isLoading || !playlist) return <Loading />;
   if (error) return <p>{error.message}</p>;
-
-  const trackList = playlist.tracks.items.map((item) => item.track.uri);
 
   return (
     <MainContentStack>
@@ -47,10 +45,21 @@ export const PlaylsitProfile = () => {
                 __html: playlist.description,
               }}
             />
-            <Typography
-              variant="subtitle2"
-              sx={{ fontWeight: 400 }}
-            >{`${playlist.followers.total} followers`}</Typography>
+            <Box>
+              <Typography
+                variant="subtitle2"
+                sx={{ fontWeight: 400, marginBottom: '.5rem' }}
+              >
+                {`${playlist.followers.total} followers`}
+              </Typography>
+              <ListenButton
+                size="small"
+                href={playlist.external_urls.spotify}
+                variant="contained"
+              >
+                Listen on Spotify
+              </ListenButton>
+            </Box>
           </InfoWrapper>
         </PlaylistWrapper>
       </HeroSection>
@@ -59,7 +68,8 @@ export const PlaylsitProfile = () => {
           <TrackHeader />
           <List dense>
             {playlist.tracks.items.map(({ track }, index) => {
-              const { id, album, name, artists, duration_ms, uri } = track;
+              const { id, album, name, artists, duration_ms, external_urls } =
+                track;
 
               return (
                 <Track
@@ -70,8 +80,7 @@ export const PlaylsitProfile = () => {
                   albumName={album.name}
                   artists={artists.map((artist) => artist.name).join(', ')}
                   duration={duration_ms}
-                  onClick={() => onSongSelect({ trackList, uri })}
-                  selected={isSelected(uri)}
+                  listenUrl={external_urls.spotify}
                 />
               );
             })}

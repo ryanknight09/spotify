@@ -1,28 +1,44 @@
 import { Box, Stack, Typography, styled } from '@mui/material';
+import { useHover } from '@spotify/utils';
+import { ListenButton } from './listenButton';
 
 export const ArtistCard = ({
   imageUrl,
   name,
   type,
+  listenUrl,
 }: {
   imageUrl: string;
   name: string;
   type: 'Artist' | 'Profile';
-}) => (
-  <ArtistCardWrapper>
-    <ImageContainer>
-      <ArtistImage src={imageUrl} alt="artist-image" />
-    </ImageContainer>
-    <Typography
-      sx={{ color: 'white', fontWeight: 700, marginBottom: '.25rem' }}
-    >
-      {name}
-    </Typography>
-    <Type variant="caption" sx={{ margin: 0 }}>
-      {type}
-    </Type>
-  </ArtistCardWrapper>
-);
+  listenUrl: string;
+}) => {
+  const { isHovering, hoverHandlers } = useHover();
+
+  return (
+    <ArtistCardWrapper {...hoverHandlers}>
+      <ImageContainer>
+        <ArtistImage src={imageUrl} alt="artist-image" />
+      </ImageContainer>
+      <Typography
+        sx={{ color: 'white', fontWeight: 700, marginBottom: '.25rem' }}
+      >
+        {name}
+      </Typography>
+      <Box minHeight={'32px'}>
+        {isHovering ? (
+          <ListenButton size="small" href={listenUrl} variant="contained">
+            Listen on Spotify
+          </ListenButton>
+        ) : (
+          <Type variant="caption" sx={{ margin: 0 }}>
+            {type}
+          </Type>
+        )}
+      </Box>
+    </ArtistCardWrapper>
+  );
+};
 
 export const ArtistGrid = styled(Box)(
   ({ numcards }: { numcards?: number }) => ({

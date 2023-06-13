@@ -22,9 +22,8 @@ export const YourLibrary = () => {
   if (isLoading || !categoriesResponse) return <Loading />;
   if (error) return <p>{error.message}</p>;
 
+  console.log(categoriesResponse);
   const assignedColors: { [key: number]: string } = {};
-
-  console.table(categoriesResponse.categories.items);
 
   return (
     <SearchWrapper>
