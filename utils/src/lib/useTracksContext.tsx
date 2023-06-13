@@ -9,6 +9,7 @@ export type useTracksResponse = {
   onSongSelect: ({ trackList, uri }: SongSelectProps) => void;
   isSelected: (uri: string) => boolean;
   setIndex: React.Dispatch<React.SetStateAction<number>>;
+  setPlay: React.Dispatch<React.SetStateAction<boolean>>;
 };
 
 const TracksContext = createContext<useTracksResponse>({
@@ -18,6 +19,7 @@ const TracksContext = createContext<useTracksResponse>({
   onSongSelect: () => null,
   isSelected: () => false,
   setIndex: () => null,
+  setPlay: () => null,
 });
 
 export const TracksContextProvider = ({
@@ -47,6 +49,7 @@ export const TracksContextProvider = ({
         tracks,
         index,
         play,
+        setPlay,
         onSongSelect,
         isSelected,
         setIndex,
