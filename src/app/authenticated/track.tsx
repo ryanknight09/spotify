@@ -1,16 +1,23 @@
 import HeadphonesIcon from '@mui/icons-material/Headphones';
+import PauseIcon from '@mui/icons-material/Pause';
+import PlayArrowIcon from '@mui/icons-material/PlayArrow';
+import type { ListItemTextProps } from '@mui/material';
 import {
   Avatar,
   Box,
-  ListItem,
   ListItemAvatar,
   ListItemIcon,
   ListItemText,
   Typography,
   styled,
 } from '@mui/material';
-import { ListenButton } from '@spotify/components';
-import { formatDuration, useHover } from '@spotify/utils';
+import { SxSideBarItemButton } from '@spotify/components';
+import {
+  formatDuration,
+  playActive,
+  useHover,
+  useTracks,
+} from '@spotify/utils';
 
 type TrackProps = {
   orderNum: number;
@@ -20,7 +27,8 @@ type TrackProps = {
   artists?: string;
   plays?: number;
   duration: number;
-  listenUrl: string;
+  selected?: boolean;
+  onClick: () => void;
 };
 
 export const Track = ({
@@ -31,54 +39,59 @@ export const Track = ({
   artists,
   duration,
   plays,
-  listenUrl,
+  selected,
+  onClick,
 }: TrackProps) => {
   const { isHovering, hoverHandlers } = useHover();
+  const { play } = useTracks();
+
+  const showIsPlaying = selected && !isHovering && play;
+  const showIndex = !selected && !isHovering;
+  const showAction = isHovering || (!play && selected);
+
+  const ActionButton = () =>
+    selected ? (
+      <PauseIcon sx={{ color: '#1DB954' }} fontSize="small" />
+    ) : (
+      <PlayArrowIcon color="primary" fontSize="small" />
+    );
 
   return (
-    <SxListItem {...hoverHandlers}>
+    <SxSideBarItemButton {...hoverHandlers} onClick={onClick}>
       <ListItemIcon>
-        <SxIndex variant="subtitle2">{orderNum}</SxIndex>
+        {showIsPlaying && (
+          <img
+            src={playActive}
+            alt="My GIF"
+            style={{ width: '24px', height: '24px' }}
+          />
+        )}
+        {showAction && <ActionButton />}
+        {showIndex && <SxIndex variant="subtitle2">{orderNum}</SxIndex>}
       </ListItemIcon>
       <ListItemAvatar>
         <Avatar variant="square" src={imgUrl}>
           <HeadphonesIcon />
         </Avatar>
       </ListItemAvatar>
-      <SxListItemText primary={name} secondary={artists} />
+      <SxListItemText primary={name} secondary={artists} selected={selected} />
       <SxFlex>
         <SxAlbumName>{albumName || plays}</SxAlbumName>
-        {isHovering ? (
-          <ListenButton size="small" href={listenUrl} variant="contained">
-            Listen on Spotify
-          </ListenButton>
-        ) : (
-          <SxTypography>{formatDuration(duration)}</SxTypography>
-        )}
+        <SxTypography>{formatDuration(duration)}</SxTypography>
       </SxFlex>
-    </SxListItem>
+    </SxSideBarItemButton>
   );
 };
-
-export const SxListItem = styled(ListItem)(({ theme }) => ({
-  borderRadius: '.5rem',
-  width: '100%',
-  color: theme.palette.neutral.main,
-  '&:hover': {
-    backgroundColor: theme.palette.primary[200],
-  },
-}));
 
 const SxAlbumName = styled(Typography)(({ theme }) => ({
   color: theme.palette.neutral[100],
   fontSize: '.875rem',
-  [theme.breakpoints.down(1080)]: {
-    display: 'none',
+  [theme.breakpoints.down(800)]: {
+    visibility: 'hidden',
   },
 }));
 
 const SxTypography = styled(Typography)(({ theme }) => ({
-  marginLeft: 'auto',
   color: theme.palette.neutral[100],
   fontSize: '.875rem',
 }));
@@ -91,12 +104,17 @@ const SxFlex = styled(Box)(() => ({
   width: '40%',
   display: 'flex',
   justifyContent: 'space-between',
-  alignItems: 'center',
 }));
 
-const SxListItemText = styled(ListItemText)(({ theme }) => ({
+interface SxListItemProps extends ListItemTextProps {
+  selected?: boolean;
+}
+
+const SxListItemText = styled(ListItemText, {
+  shouldForwardProp: (prop) => prop !== 'isPlaying',
+})<SxListItemProps>(({ theme, selected }) => ({
   '& .MuiListItemText-primary': {
-    color: theme.palette.common.white,
+    color: selected ? '#1DB954' : theme.palette.common.white,
     fontSize: '1rem',
   },
   '& .MuiListItemText-secondary': {
