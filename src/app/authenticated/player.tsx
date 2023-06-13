@@ -6,7 +6,7 @@ import { useAuth } from '../auth-context/authContext';
 
 export const Player = () => {
   const { token } = useAuth();
-  const { tracks, index, play, setIndex } = useTracks();
+  const { tracks, index, play, setIndex, setPlay } = useTracks();
   const theme = useTheme();
 
   return (
@@ -16,7 +16,10 @@ export const Player = () => {
         uris={tracks}
         offset={index}
         play={play}
-        callback={(state) => setIndex(tracks.indexOf(state.track.uri))}
+        callback={(state) => {
+          setPlay(state.isPlaying);
+          setIndex(tracks.indexOf(state.track.uri));
+        }}
         styles={{
           bgColor: theme.palette.common.black,
           sliderColor: theme.palette.common.white,
